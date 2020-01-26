@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using api.Models;
 
 namespace api
 {
@@ -25,6 +20,10 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("gpsapp"));
+            services.Configure<GpsDatabaseSettings>(Configuration.GetSection(nameof(GpsDatabaseSettings)));
+            services.AddSingleton<IGpsDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<GpsDatabaseSettings>>().Value);
             services.AddControllers();
         }
 
