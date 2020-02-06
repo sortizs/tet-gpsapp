@@ -1,10 +1,12 @@
 using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 
 namespace api.Controllers
 {
+    [Authorize]
     [Route("api/[Controller]")]
     [ApiController]
     public class LocationController : ControllerBase

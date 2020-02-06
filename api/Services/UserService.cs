@@ -1,20 +1,57 @@
-using api.Models;
-using MongoDB.Driver;
+using System;
+using System.Text;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System.Linq;
+using api.Models;
+using api.Helpers;
+using Microsoft.IdentityModel.Tokens;
 
 namespace api.Services
 {
     public class UserService
     {
         private readonly IMongoCollection<User> _users;
+        private readonly AppSettings _appSettings;
 
-        public UserService(IGpsDatabaseSettings settings)
+        public UserService(IGpsDatabaseSettings settings, IOptions<AppSettings> appSettings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
             _users = database.GetCollection<User>("Users");
+            _appSettings = appSettings.Value;
+        }
+
+        public User Authenticate(string username, string password)
+        {
+            var user = _users.Find<User>(u => u.Username == username && u.Password == password).FirstOrDefault();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var hash = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(hash), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            user.Token = tokenHandler.WriteToken(token);
+
+            return user.WithoutPassword();
         }
 
         public List<User> Get() =>
