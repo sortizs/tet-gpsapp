@@ -27,7 +27,7 @@ import { MapComponent } from './components/map/map.component';
     AppRoutingModule,
     HttpClientModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyCokF7_y7qmtBY37BVBvYQiU80aIk-BA6g'
+      apiKey: ''
     })
   ],
   providers: [],
