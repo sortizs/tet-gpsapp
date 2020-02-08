@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace api.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [Route("api/[Controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -18,7 +18,7 @@ namespace api.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
+        // [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]AuthenticateModel model)
         {
@@ -54,7 +54,7 @@ namespace api.Controllers
         {
             _userService.Create(user);
 
-            return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
+            return CreatedAtRoute("GetUser", new { id = user.Id }, user);
         }
 
         [HttpPut("{id:length(24)}")]
@@ -69,7 +69,7 @@ namespace api.Controllers
 
             _userService.Update(id, userIn);
 
-            return NoContent();
+            return CreatedAtRoute("GetUser", new { id = user.Id}, user);
         }
     }
 }

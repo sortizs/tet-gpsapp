@@ -23,6 +23,12 @@ namespace api.Services
         public Location Get(string id) =>
             _location.Find<Location>(location => location.Id == id).FirstOrDefault();
 
+        public List<Location> GetLocations(string id)
+        {
+            var locations = _location.Find(l => l.UserId == id).ToList();
+            return locations;
+        }
+
         public Location Create(Location location)
         {
             _location.InsertOne(location);

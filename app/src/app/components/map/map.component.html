@@ -1,0 +1,12 @@
+<agm-map [latitude]="lat" [longitude]="lng" [zoom]="13">
+    <agm-marker *ngFor="let location of locations"
+        [latitude]="location.latitude"
+        [longitude]="location.longitude">
+        <agm-info-window>
+            <strong>{{ location.id }}</strong>
+            <p>
+                {{ location.userId }}
+            </p>
+        </agm-info-window>
+    </agm-marker>
+</agm-map>

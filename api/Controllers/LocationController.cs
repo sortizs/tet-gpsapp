@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace api.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [Route("api/[Controller]")]
     [ApiController]
     public class LocationController : ControllerBase
@@ -33,6 +33,19 @@ namespace api.Controllers
             }
 
             return location;
+        }
+
+        [HttpGet("{id:length(24)}", Name = "GetLocation")]
+        public ActionResult<List<Location>> GetLocations(string id)
+        {
+            var locations = _locationService.GetLocations(id);
+
+            if (locations == null)
+            {
+                return NotFound();
+            }
+
+            return locations;
         }
 
         [HttpPost]

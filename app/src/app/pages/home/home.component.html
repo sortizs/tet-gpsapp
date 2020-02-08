@@ -1,0 +1,21 @@
+<div class="row ml-auto">
+    <!-- <div class="ml-auto "> -->
+    <button class="btn btn-block" type="button" (click)="record()"
+        [ngClass]="{'btn-outline-success': !recording, 'btn-outline-danger': recording}">
+        <span *ngIf="!recording">
+            Grabar posición
+        </span>
+        <span *ngIf="recording">
+            Detener
+        </span>
+    </button>
+    <!-- </div> -->
+</div>
+<div class="row mt-3">
+    <div class="col-md-3">
+        <loc-list [locations]="locations"></loc-list>
+    </div>
+    <div class="col-md-9">
+        <app-map [locations]="locations"></app-map>
+    </div>
+</div>
