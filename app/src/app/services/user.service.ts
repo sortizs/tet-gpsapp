@@ -19,7 +19,6 @@ export class UserService {
   }
 
   getUsers(): Observable<UserModel[]> {
-
     const headers = new HttpHeaders({
       Authorization: this.token
     });
@@ -38,7 +37,6 @@ export class UserService {
   }
 
   createUser(user: UserModel): Observable<UserModel> {
-
     const headers = new HttpHeaders({
       Authorization: this.token
     });
@@ -54,5 +52,11 @@ export class UserService {
 
   loggedIn(): boolean {
     return localStorage.getItem('token') ? true : false;
+  }
+
+  auth(username: string, password: string): Observable<string> {
+    let url = `${this.url}/authenticate`;
+
+    return this.http.post<string>(url, { username, password });
   }
 }
