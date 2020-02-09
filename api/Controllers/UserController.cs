@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace api.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [Route("api/[Controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -18,8 +18,8 @@ namespace api.Controllers
             _userService = userService;
         }
 
-        // [AllowAnonymous]
-        [HttpPost("authenticate")]
+        [AllowAnonymous]
+        [HttpPost("auth")]
         public IActionResult Authenticate([FromBody]AuthenticateModel model)
         {
             var user = _userService.Authenticate(model.Username, model.Password);
@@ -29,7 +29,7 @@ namespace api.Controllers
                 return BadRequest(new { message = "Username or password is incorrect"});
             }
 
-            return Ok(user);
+            return Ok(user.Token);
         }
 
         [HttpGet]

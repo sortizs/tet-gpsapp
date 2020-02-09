@@ -37,7 +37,7 @@ namespace api.Services
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var hash = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -45,7 +45,7 @@ namespace api.Services
                     new Claim(ClaimTypes.Name, user.Id)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(hash), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -63,10 +63,14 @@ namespace api.Services
         public User Create(User user)
         {
             _users.InsertOne(user);
-            return user;
+            return user.WithoutPassword();
         }
 
-        public void Update(string id, User userIn) =>
+        public User Update(string id, User userIn)
+        {
             _users.ReplaceOne(user => user.Id == id, userIn);
+            return userIn.WithoutPassword();
+        }
+            
     }
 }
