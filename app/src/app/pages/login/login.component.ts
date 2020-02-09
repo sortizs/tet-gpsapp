@@ -24,17 +24,15 @@ export class LoginComponent implements OnInit {
   buildForm(): void {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(5)]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required, Validators.minLength(1)]]
     });
   }
 
   onSubmit(): void {
     let username = this.loginForm.get('username').value;
     let password = this.loginForm.get('password').value;
-    let token = 'testToken';
-    // this._us.auth(username, password).subscribe(data => token = data);
+    this._us.auth(username, password).subscribe(data => localStorage.setItem('token', data.token));
 
-    localStorage.setItem('token', token);
     if (localStorage.getItem('token') != null) {
       this._r.navigateByUrl('/home');
     }

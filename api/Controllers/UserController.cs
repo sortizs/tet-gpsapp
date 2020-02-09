@@ -29,7 +29,7 @@ namespace api.Controllers
                 return BadRequest(new { message = "Username or password is incorrect"});
             }
 
-            return Ok(user.Token);
+            return Ok(user);
         }
 
         [HttpGet]
@@ -49,6 +49,7 @@ namespace api.Controllers
             return user;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult<User> Create(User user)
         {

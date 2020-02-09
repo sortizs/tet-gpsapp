@@ -54,9 +54,9 @@ export class UserService {
     return localStorage.getItem('token') ? true : false;
   }
 
-  auth(username: string, password: string): Observable<string> {
-    let url = `${this.url}/authenticate`;
+  auth(username: string, password: string): Observable<UserModel> {
+    let url = `${this.url}/auth`;
 
-    return this.http.post<string>(url, { username, password });
+    return this.http.post<UserModel>(url, { username, password });
   }
 }
